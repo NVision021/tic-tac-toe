@@ -48,25 +48,24 @@ const gameboard = (function() {
 
 
 const gameHandler = (function() {
-  let player1 = {};
-  let player2 = {};
+  let playerOne = {};
+  let playerTwo = {};
 
-  const startGame = (player1Data, player2Data) => {
-    player1 = createPlayer(...player1Data);
-    console.log(gameHandler.player1);
-    player2 = createPlayer(...player2Data);
+  const startGame = (playerOneData, playerTwoData) => {
+    playerOne = createPlayer(...playerOneData);
+    playerTwo = createPlayer(...playerTwoData);
     gameboard.clearBoard();
   }
 
   const getPlayers = () => {
-    return {player1, player2};
+    return {playerOne, playerTwo};
   }
 
   const getWhoseTurn = () => {
     //First check who should go first based on number with ternary operator and destructuring
-    let [firstPlayer, secondPlayer] = player1.getGoesFirst() 
-    ? [player1, player2] 
-    : [player2, player1];
+    let [firstPlayer, secondPlayer] = playerOne.getGoesFirst() 
+    ? [playerOne, playerTwo] 
+    : [playerTwo, playerOne];
 
 
     if (gameboard.getCounters() % 2 === 0) {
@@ -76,19 +75,49 @@ const gameHandler = (function() {
     }
   }
 
+  const checkWin = () => {
+    let winningCombinations = [
+      [0, 1, 2],
+      [3, 4, 5], 
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ]
+
+    for (let playerKey in gameHandler.getPlayers()) {
+      player = gameHandler.getPlayers()[playerKey];
+      let tokenPositions = [];
+      let count = 0;
+      for (let placedToken of gameboard.getBoard()) {
+        if (placedToken === player.getToken()){
+          tokenPositions.push(count);
+          count++;
+        }
+      }
+      
+      for (let combination of winningCombinations) {
+        if (combination.every((value) => tokenPositions.includes(value))) {
+          console.log(`${player.getName()} wins!!`);
+          break;
+        }
+      }
+    }
+  }
   /*
-  const changeTurn = (currentTurn)
-
-  const checkWin = () 
-
-  const takeTurn
+  
+  const takeTurn (should call a series of other functions from this function factory, may just be for playing in the console
 
 
 */
 
-  return{getPlayers, startGame, getWhoseTurn};
+  return{getPlayers, startGame, getWhoseTurn, checkWin};
 })();
 
 gameHandler.startGame(['Nick', 'x', true], ['Grace', 'o', false]);
-console.log(gameHandler.getPlayers());
-console.log(gameHandler.getWhoseTurn().getName());
+gameboard.addToken(0, 'x');
+gameboard.addToken(1, 'x');
+gameboard.addToken(2, 'x');
+gameHandler.checkWin();
