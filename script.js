@@ -76,11 +76,9 @@ const gameHandler = (function() {
   }
 
 
-  //need to update this by 
-  //1) passing a parameter to check win with whose turn it is (then, when calling the function for a turn, store whose turn it is in a variable at the start of the turn and pass that to checkWin)
-  //2) deleting checking for both players: only one player needs to be checked (the player who just placed the token)
-  //3) add logic for a draw (else if number of tokens = 9, announce a draw)
   const checkWin = (turnPlayer) => {
+// returns true when the game is over
+
     let winningCombinations = [
       [0, 1, 2],
       [3, 4, 5], 
@@ -107,22 +105,33 @@ const gameHandler = (function() {
     for (let combination of winningCombinations) {
       if (combination.every((value) => tokenPositions.includes(value))) {
         console.log(`${playerName} wins!!`);
-        break;
+        return true;
       } else if (gameboard.getCounters() >= 9) {
         console.log("It's a draw!!");
-        break;
+        return true;
       }
     }
+    return false;
   }
 
-  //const takeTurn (should call a series of other functions from this function factory, may just be for playing in the console
+  const takeTurn = () => {
+    let whoseTurn = gameHandler.getWhoseTurn();
+    console.log(`It's ${whoseTurn.getName()}'s turn`)
+    //^remove in final product
+    console.log(gameboard.getBoard());
+    console.log(`What position would you like to put your token in?`)
+    //^remove in final product
+    let tokenPosition = prompt('Where should the token go (0-8)?')
+    //^remove in final product
+    gameboard.addToken(tokenPosition, whoseTurn.getToken());
+    gameHandler.checkWin(whoseTurn);
+    if (gameHandler.checkWin(whoseTurn) !== true) {
+      gameHandler.takeTurn();
+    }
 
+  }
   
-  return{getPlayers, startGame, getWhoseTurn, checkWin};
+  return{getPlayers, startGame, getWhoseTurn, checkWin, takeTurn};
 })();
 
 gameHandler.startGame(['Nick', 'x', true], ['Grace', 'o', false]);
-gameboard.addToken(0, 'x');
-gameboard.addToken(1, 'x');
-gameboard.addToken(2, 'x');
-gameHandler.checkWin(createPlayer('Nick', 'x', true));
