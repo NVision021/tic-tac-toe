@@ -1,0 +1,26 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+button {
+  width: 100px;
+}
+
+.board-container {
+  display: grid;
+  height: 600px;
+  width: 600px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+}
+
+.cell {
+  border: solid black 5px;
+}
+
+.cell:hover {
+  cursor: pointer;
+  background-color: grey;
+}
