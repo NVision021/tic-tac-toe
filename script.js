@@ -55,6 +55,7 @@ const gameHandler = (function() {
     playerOne = createPlayer(...playerOneData);
     playerTwo = createPlayer(...playerTwoData);
     gameboard.clearBoard();
+    gameHandler.takeTurn();
   }
 
   const getPlayers = () => {
@@ -98,8 +99,8 @@ const gameHandler = (function() {
     for (let placedToken of gameboard.getBoard()) {
       if (placedToken === playerToken){
         tokenPositions.push(count);
-        count++;
       }
+      count++;
     }
     
     for (let combination of winningCombinations) {
@@ -118,13 +119,13 @@ const gameHandler = (function() {
     let whoseTurn = gameHandler.getWhoseTurn();
     console.log(`It's ${whoseTurn.getName()}'s turn`)
     //^remove in final product
-    console.log(gameboard.getBoard());
     console.log(`What position would you like to put your token in?`)
     //^remove in final product
     let tokenPosition = prompt('Where should the token go (0-8)?')
     //^remove in final product
     gameboard.addToken(tokenPosition, whoseTurn.getToken());
-    gameHandler.checkWin(whoseTurn);
+    console.log(gameboard.getBoard());
+    //^remove in final product
     if (gameHandler.checkWin(whoseTurn) !== true) {
       gameHandler.takeTurn();
     }
@@ -134,4 +135,4 @@ const gameHandler = (function() {
   return{getPlayers, startGame, getWhoseTurn, checkWin, takeTurn};
 })();
 
-gameHandler.startGame(['Nick', 'x', true], ['Grace', 'o', false]);
+//gameHandler.startGame(['Nick', 'x', false], ['Grace', 'o', true]);
